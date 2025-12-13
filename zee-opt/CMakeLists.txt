@@ -1,6 +1,7 @@
 set(LIBS
   MLIRArithDialect
   MLIRFuncDialect
+  MLIRTensorDialect
   MLIRParser
   MLIRPass
   MLIRTransforms
@@ -9,6 +10,16 @@ set(LIBS
   MLIRMlirOptMain
   MLIRZee
 )
+
+if(ZEE_ENABLE_STABLEHLO)
+  list(APPEND LIBS
+    MLIRZeeStableHLOToZee
+    StablehloRegister
+    StablehloOps
+    ChloOps
+    VhloOps
+  )
+endif()
 
 add_llvm_executable(zee-opt zee-opt.cpp)
 

@@ -26,6 +26,8 @@ def Zee_Dialect : Dialect {
   let cppNamespace = "::mlir::zee";
 
   let useDefaultTypePrinterParser = 1;
+  // Disable properties-based attributes (requires newer MLIR)
+  let usePropertiesForAttributes = 0;
   let extraClassDeclaration = [{
     void registerTypes();
   }];

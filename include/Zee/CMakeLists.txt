@@ -16,3 +16,6 @@ set(LLVM_TARGET_DEFINITIONS ZeePasses.td)
 mlir_tablegen(ZeePasses.h.inc -gen-pass-decls)
 add_public_tablegen_target(MLIRZeePassesIncGen)
 add_mlir_doc(ZeePasses ZeePasses Zee/ -gen-pass-doc)
+
+# Conversion passes
+add_subdirectory(Conversions)

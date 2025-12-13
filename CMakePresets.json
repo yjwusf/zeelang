@@ -1,0 +1,15 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "default",
+      "displayName": "Default Config",
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "MLIR_DIR": "/usr/lib/llvm-20/lib/cmake/mlir",
+        "LLVM_DIR": "/usr/lib/llvm-20/lib/cmake/llvm",
+        "ZEE_ENABLE_STABLEHLO": "OFF"
+      }
+    }
+  ]
+}

@@ -8,6 +8,18 @@
 
 #include "Zee/ZeeOps.h"
 #include "Zee/ZeeDialect.h"
+#include "mlir/IR/OpImplementation.h"
+
+using namespace mlir;
+using namespace mlir::zee;
+
+//===----------------------------------------------------------------------===//
+// ConstantOp
+//===----------------------------------------------------------------------===//
+
+OpFoldResult ConstantOp::fold(FoldAdaptor adaptor) {
+  return getValueAttr();
+}
 
 #define GET_OP_CLASSES
 #include "Zee/ZeeOps.cpp.inc"

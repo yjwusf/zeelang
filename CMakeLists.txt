@@ -3,6 +3,9 @@ project(zee-dialect LANGUAGES CXX C)
 
 set(CMAKE_CXX_STANDARD 17 CACHE STRING "C++ standard to conform to")
 
+# Option to enable StableHLO support
+option(ZEE_ENABLE_STABLEHLO "Enable StableHLO dialect support" ON)
+
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
   find_package(MLIR REQUIRED CONFIG)
 
@@ -37,6 +40,31 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories(${PROJECT_BINARY_DIR}/include)
 link_directories(${LLVM_BUILD_LIBRARY_DIR})
 add_definitions(${LLVM_DEFINITIONS})
+
+#-------------------------------------------------------------------------------
+# StableHLO Configuration
+#-------------------------------------------------------------------------------
+if(ZEE_ENABLE_STABLEHLO)
+  # StableHLO can be provided externally or built as a subdirectory
+  if(NOT STABLEHLO_SOURCE_DIR)
+    set(STABLEHLO_SOURCE_DIR "${PROJECT_SOURCE_DIR}/../stablehlo")
+  endif()
+
+  if(EXISTS "${STABLEHLO_SOURCE_DIR}/CMakeLists.txt")
+    message(STATUS "Building StableHLO from: ${STABLEHLO_SOURCE_DIR}")
+    set(STABLEHLO_BUILD_EMBEDDED ON CACHE BOOL "" FORCE)
+    add_subdirectory(${STABLEHLO_SOURCE_DIR} ${CMAKE_BINARY_DIR}/stablehlo EXCLUDE_FROM_ALL)
+
+    # Add StableHLO include directories
+    include_directories(${STABLEHLO_SOURCE_DIR})
+    include_directories(${CMAKE_BINARY_DIR}/stablehlo)
+
+    add_definitions(-DZEE_ENABLE_STABLEHLO)
+  else()
+    message(WARNING "StableHLO not found at ${STABLEHLO_SOURCE_DIR}, disabling StableHLO support")
+    set(ZEE_ENABLE_STABLEHLO OFF)
+  endif()
+endif()
 
 add_subdirectory(include)
 add_subdirectory(lib)
