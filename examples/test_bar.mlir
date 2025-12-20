@@ -1,0 +1,3 @@
+func.func @bar() {
+  return
+}

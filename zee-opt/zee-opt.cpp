@@ -21,9 +21,9 @@
 
 #include "Zee/ZeeDialect.h"
 #include "Zee/ZeePasses.h"
+#include "Zee/Conversions/Passes.h"
 
 #ifdef ZEE_ENABLE_STABLEHLO
-#include "Zee/Conversions/Passes.h"
 #include "stablehlo/dialect/Register.h"
 #endif
 
@@ -31,9 +31,12 @@ int main(int argc, char **argv) {
   // Register zee passes.
   mlir::zee::registerPasses();
 
+  // Register ZeeToArith conversion pass (always available).
+  mlir::zee::registerConvertZeeToArith();
+
 #ifdef ZEE_ENABLE_STABLEHLO
-  // Register StableHLO conversion passes.
-  mlir::zee::registerZeeConversionsPasses();
+  // Register StableHLO conversion pass.
+  mlir::zee::registerConvertStableHLOToZee();
 #endif
 
   mlir::DialectRegistry registry;

@@ -4,6 +4,7 @@ if(APPLE)
   set(LIBS
     MLIR
     MLIRZee
+    MLIRZeeToArith
   )
 else()
   set(LIBS
@@ -17,6 +18,7 @@ else()
     MLIRSupport
     MLIRMlirOptMain
     MLIRZee
+    MLIRZeeToArith
   )
 endif()
 

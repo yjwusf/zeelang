@@ -41,4 +41,33 @@ def ConvertStableHLOToZee : Pass<"convert-stablehlo-to-zee"> {
   ];
 }
 
+def ConvertZeeToArith : Pass<"convert-zee-to-arith"> {
+  let summary = "Convert Zee dialect to Arith dialect";
+  let description = [{
+    This pass lowers Zee dialect operations to equivalent operations in the
+    Arith dialect. For example, zee.foo is lowered to arith.addi (treating
+    it as an addition with itself).
+
+    Example:
+    ```mlir
+    // Input (Zee):
+    func.func @test(%arg0: i32) -> i32 {
+      %0 = zee.foo %arg0 : i32
+      return %0 : i32
+    }
+
+    // Output (Arith):
+    func.func @test(%arg0: i32) -> i32 {
+      %0 = arith.addi %arg0, %arg0 : i32
+      return %0 : i32
+    }
+    ```
+  }];
+
+  let dependentDialects = [
+    "mlir::arith::ArithDialect",
+    "mlir::func::FuncDialect",
+  ];
+}
+
 #endif // ZEE_CONVERSION_PASSES
