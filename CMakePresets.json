@@ -8,7 +8,7 @@
       "cacheVariables": {
         "MLIR_DIR": "/usr/lib/llvm-20/lib/cmake/mlir",
         "LLVM_DIR": "/usr/lib/llvm-20/lib/cmake/llvm",
-        "ZEE_ENABLE_STABLEHLO": "OFF"
+        "ZEE_ENABLE_STABLEHLO": "ON"
       }
     }
   ]
