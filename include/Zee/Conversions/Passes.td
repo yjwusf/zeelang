@@ -70,4 +70,41 @@ def ConvertZeeToArith : Pass<"convert-zee-to-arith"> {
   ];
 }
 
+def LowerToLLVM : Pass<"lower-to-llvm", "mlir::ModuleOp"> {
+  let summary = "Lower all dialects to LLVM dialect for JIT execution";
+  let description = [{
+    This pass performs full lowering of high-level dialects (Arith, Func, SCF,
+    Affine, MemRef) to the LLVM dialect. This enables JIT compilation and
+    execution using the MLIR ExecutionEngine.
+
+    The lowering happens in multiple stages through transitive lowering:
+    - Affine -> Standard
+    - SCF -> ControlFlow
+    - Arith -> LLVM
+    - MemRef -> LLVM
+    - Func -> LLVM
+    - ControlFlow -> LLVM
+
+    Example:
+    ```mlir
+    // Input:
+    func.func @main() -> i32 {
+      %c42 = arith.constant 42 : i32
+      return %c42 : i32
+    }
+
+    // Output (LLVM):
+    llvm.func @main() -> i32 {
+      %0 = llvm.mlir.constant(42 : i32) : i32
+      llvm.return %0 : i32
+    }
+    ```
+  }];
+
+  let dependentDialects = [
+    "mlir::LLVM::LLVMDialect",
+    "mlir::scf::SCFDialect",
+  ];
+}
+
 #endif // ZEE_CONVERSION_PASSES

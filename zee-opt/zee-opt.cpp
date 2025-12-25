@@ -7,7 +7,11 @@
 //===----------------------------------------------------------------------===//
 
 #include "mlir/Dialect/Arith/IR/Arith.h"
+#include "mlir/Dialect/ControlFlow/IR/ControlFlow.h"
 #include "mlir/Dialect/Func/IR/FuncOps.h"
+#include "mlir/Dialect/LLVMIR/LLVMDialect.h"
+#include "mlir/Dialect/MemRef/IR/MemRef.h"
+#include "mlir/Dialect/SCF/IR/SCF.h"
 #include "mlir/Dialect/Tensor/IR/Tensor.h"
 #include "mlir/IR/MLIRContext.h"
 #include "mlir/Pass/Pass.h"
@@ -34,6 +38,9 @@ int main(int argc, char **argv) {
   // Register ZeeToArith conversion pass (always available).
   mlir::zee::registerConvertZeeToArith();
 
+  // Register LowerToLLVM pass (for full lowering and JIT).
+  mlir::zee::registerLowerToLLVM();
+
 #ifdef ZEE_ENABLE_STABLEHLO
   // Register StableHLO conversion pass.
   mlir::zee::registerConvertStableHLOToZee();
@@ -41,7 +48,9 @@ int main(int argc, char **argv) {
 
   mlir::DialectRegistry registry;
   registry.insert<mlir::zee::ZeeDialect, mlir::arith::ArithDialect,
-                  mlir::func::FuncDialect, mlir::tensor::TensorDialect>();
+                  mlir::func::FuncDialect, mlir::tensor::TensorDialect,
+                  mlir::scf::SCFDialect, mlir::cf::ControlFlowDialect,
+                  mlir::memref::MemRefDialect, mlir::LLVM::LLVMDialect>();
 
 #ifdef ZEE_ENABLE_STABLEHLO
   // Register StableHLO dialects (stablehlo, chlo, vhlo)

@@ -3,12 +3,22 @@
 if(APPLE)
   set(LIBS
     MLIR
+    MLIRExecutionEngineShared
     MLIRZee
     MLIRZeeToArith
     MLIRZeeLowerToLLVM
   )
 else()
   set(LIBS
+    # Core MLIR
+    MLIRIR
+    MLIRParser
+    MLIRPass
+    MLIRTransforms
+    MLIRTransformUtils
+    MLIRSupport
+
+    # Dialects
     MLIRArithDialect
     MLIRControlFlowDialect
     MLIRFuncDialect
@@ -16,40 +26,34 @@ else()
     MLIRMemRefDialect
     MLIRSCFDialect
     MLIRTensorDialect
-    MLIRParser
-    MLIRPass
-    MLIRTransforms
-    MLIRTransformUtils
-    MLIRSupport
-    MLIRMlirOptMain
+
+    # Conversions
     MLIRAffineToStandard
     MLIRArithToLLVM
     MLIRControlFlowToLLVM
     MLIRFuncToLLVM
     MLIRMemRefToLLVM
     MLIRSCFToControlFlow
+
+    # Execution Engine
+    MLIRExecutionEngine
+    MLIRTargetLLVMIRExport
+    MLIRLLVMToLLVMIRTranslation
+    MLIRBuiltinToLLVMIRTranslation
+
+    # Zee libraries
     MLIRZee
     MLIRZeeToArith
     MLIRZeeLowerToLLVM
   )
 endif()
 
-if(ZEE_ENABLE_STABLEHLO)
-  list(APPEND LIBS
-    MLIRZeeStableHLOToZee
-    StablehloRegister
-    StablehloOps
-    ChloOps
-    VhloOps
-  )
-endif()
+add_llvm_executable(zee-jit zee-jit.cpp)
 
-add_llvm_executable(zee-opt zee-opt.cpp)
+llvm_update_compile_flags(zee-jit)
 
-llvm_update_compile_flags(zee-opt)
-
-target_link_libraries(zee-opt PRIVATE ${LIBS})
+target_link_libraries(zee-jit PRIVATE ${LIBS})
 
 if(NOT APPLE)
-  mlir_check_all_link_libraries(zee-opt)
+  mlir_check_all_link_libraries(zee-jit)
 endif()

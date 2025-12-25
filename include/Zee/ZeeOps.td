@@ -217,4 +217,28 @@ def Zee_ConstantOp : Zee_Op<"constant", [Pure]> {
   let hasFolder = 1;
 }
 
+//===----------------------------------------------------------------------===//
+// Print operation (for JIT demonstration)
+//===----------------------------------------------------------------------===//
+
+def Zee_PrintOp : Zee_Op<"print"> {
+  let summary = "Print an integer value";
+  let description = [{
+    Prints an integer value to stdout. This operation is used for
+    demonstrating JIT execution.
+
+    Example:
+    ```mlir
+    %c42 = arith.constant 42 : i32
+    zee.print %c42 : i32
+    ```
+  }];
+
+  let arguments = (ins I32:$input);
+
+  let assemblyFormat = [{
+    $input attr-dict `:` type($input)
+  }];
+}
+
 #endif // ZEE_OPS
